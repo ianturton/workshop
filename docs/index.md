@@ -13,19 +13,19 @@ the first thing we need to do is get a copy of the source code it needs.
 Goto [GitHub](github.com) and either create aan account or log into your
 existing account. 
 
-![sign up screen](/images/signup.png)
+![sign up screen](../images/signup.png)
 
 ## Fork the Repository
 
 Goto the search box in the **top left** corner and type `GeoTools` in and press
 return. 
 
-![geotools-repo](/images/geotools-repo.png)
+![geotools-repo](../images/geotools-repo.png)
 
 Click on the **official** GeoTools (`geotools/geotools`) this is the master
 repository where the **master** version of GeoTools lives. 
 
-![geotools-repo](/images/geotoolsrepo.png)
+![geotools-repo](../images/geotoolsrepo.png)
 
 So that the changes we make today don't affect other people until we want them
 to we need a copy of the master version. In git terms this is known as *forking*
