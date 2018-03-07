@@ -8,24 +8,24 @@ This site is designed to help new developers join and contribute to the [GeoTool
 GeoTools is the library that is used to build GeoServer (and other projects) so
 the first thing we need to do is get a copy of the source code it needs.
 
-## Log on to Github
+## Log on to GitHub
 
-Goto [GitHub](github.com) and either create aan account or log into your
+Goto [GitHub](github.com) and either create an account or log into your
 existing account. 
 
-![sign up screen](../images/signup.png)
+![sign up screen](images/signup.png)
 
 ## Fork the Repository
 
 Goto the search box in the **top left** corner and type `GeoTools` in and press
 return. 
 
-![geotools-repo](../images/geotools-repo.png)
+![geotools-repo](images/geotools-repo.png)
 
 Click on the **official** GeoTools (`geotools/geotools`) this is the master
 repository where the **master** version of GeoTools lives. 
 
-![geotools-repo](../images/geotoolsrepo.png)
+![geotools-repo](images/geotoolsrepo.png)
 
 So that the changes we make today don't affect other people until we want them
 to we need a copy of the master version. In git terms this is known as *forking*
@@ -39,7 +39,7 @@ tree (on GitHub).
 Before we can do anything to change the code we will need to get a copy on our
 local machine. This is called *cloning* the repository because it uses the git
 clone command. So you will need a command window (terminal etc) and then
-naviagte to your code directory. Your url will be different but if you click on
+navigate to your code directory. Your url will be different but if you click on
 the green clone or download button you can copy the URL shown - I prefer to use
 SSH rather than HTTPS, if SSH doesn't scare you then click on that link, either
 way copy the URL and paste it into the following command.
@@ -221,5 +221,175 @@ After a while you will see:
     [INFO] Final Memory: 148M/681M
     [INFO]
     ------------------------------------------------------------------------
+
+
+# Add the code to your IDE
+
+## Eclipse
+
+If you use eclipse as your IDE importing the source code is easy. Start eclipse
+up in the normal way, select a new workspace (I called mine `geotools`).
+
+Then right-click in the projects window and select `import`, and then
+`maven->import existing maven projects`:
+
+![import mvn](images/mvn-import.png)
+
+
+![](images/import.png)
+
+Ignore the warning popups:
+
+![warning](images/warning.png)
+
+Once everything has finished importing you will see a few little red crosses,
+errors in the build. Open up one of the projects with an issue (e.g. gt-cql) and
+click on the pom.xml file to open it. Click on the red line and select 
+mark goal as ignored in eclipse preferences. This should make most of the issues
+go away, but you might need to open another one or two and do the same thing for
+their issues.
+
+![error](images/fixerrors.png)
+
+This time we will ask maven to just install the jars for us, and we will tell it
+that it is off line (`-o`) to save checking for updated jars. 
+
+     mvn install -o  -T4C 
+
+Again this will take a while but eventually you will see:
+
+    [INFO] BUILD SUCCESS
+    [INFO] ------------------------------------------------------------------------
+    [INFO] Total time: 04:34 min (Wall Clock)
+    [INFO] Finished at: 2018-03-07T20:39:57+00:00
+    [INFO] Final Memory: 155M/763M
+    [INFO] ------------------------------------------------------------------------
+
+If you are using windows you may see that you have some fails, this is
+an unfortunate side effect of the fact that none of the core developers use
+windows so bugs that are specific to windows can easily slip through. 
+
+**If you are a regular windows user please step in and help us out here.**
+
+For the time being if you do see some errors please make a note of them, at
+least we can check we don't make things worse when we make changes.
+
+----------------------
+
+When you propose a change to GeoTools a tool called
+[Travis](https://travis-ci.org/) automatically takes your changes and tries to compile them
+with the rest of the code base and checks all the tests still pass. Until Travis
+says that your changes are good no one will look at merging it into the master
+branch.
+
+For reasons of cost (and speed) Travis doesn't use windows boxes.
+
+--------------------------
+
+## Running just a module's tests
+
+While you are working on a change you probably don't want to spend 4 or 5
+minutes each time you want to check your changes. So, it is easy to run just the
+tests in a module either from the command line or in eclipse.
+
+From the command line you just change directory to module you are interested in
+e.g. `modules/library/cql` and then use exactly the same command as before:
+
+     mvn install -o  -T4C
+
+or if you want to make sure everything is rebuilt 
+
+    mvn clean install -o  -T4C
+
+You can also run the tests in eclipse by right clicking on `src/test/java` in
+the module of interest and scrolling down to `run as` and selecting `3 Junit
+Test`. 
+
+![junit tests](images/junit.png)
+
+You can even pick out individual tests, in eclipse just right click on the test
+you want to run or even just on the declaration of the test you are interested
+in.
+
+With maven you can run just one unit test suite or even a single test
+
+     mvn -Dtest=TestCircle test
+
+     mvn -Dtest=TestCircle#mytest test
+
+
+# GeoTools Modules
+
+GeoTools is split into modules to allow end projects to install just what they
+need rather than a monolithic block. This can make it tricky to work out exactly
+where you are looking for, fortunately they are all documented in the [user
+guide](http://docs.geotools.org/latest/userguide/). Between that and judicious
+use of the search tool you can track most things down. 
+
+In principal, each module should be self contained and build on the other
+existing modules to provide basic functionality. 
+
+# Making a big change
+
+Discuss it first, join the geotools-devel list and tell us what you plan.
+
+Read through the [developers'
+guide](http://docs.geotools.org/latest/developer/procedures/contribute.html) to
+see what you need to do. 
+
+**For anything but a very small change you will need to fill out and sign a [code
+contribution
+agreement](http://docs.geotools.org/latest/developer/procedures/contribution_license.html).** This helps us make sure we can use your code and that
+we won't get sued by your employer (or any one else).
+
+# Bug Tracking
+
+GeoTools uses [jira](https://osgeo-org.atlassian.net/browse/GEOT) to
+keep track of bugs and issues. So if you find a bug please have a scroll through
+the list to check if some one else has noticed it. 
+
+## Making a change
+
+
+1. Create a local branch:
+
+		git checkout -b fix_featureLock
+
+2. Work on the fix, using commit as needed.
+
+Please remember to always include a test case, most pull requests/patches
+will be rejected if they don’t contain one..
+
+Please make sure you’re following the coding conventions, and otherwise
+avoid any reformats to the existing code, as they make it harder to
+review your changes.
+
+If you find sections not following the coding conventions and you want
+to amend their formatting, that’s fine, please do so in a separate
+commit/patch from the real code changes.
+
+3. Review the work that was done, make sure the changes contain all the
+files you need, and no other extraneous change.:
+
+		git status
+
+In case you’re making a pull request, single commit ones are preferred,
+you can use rebase -i to squash multiple commits into one, it’s fine
+to have two commits if one is used to isolate code formatting changes
+
+4. Rebase the branch from master so you get a nice clean set of changes:
+
+		git pull --rebase master
+
+5. Do a full maven build (with tests) to make sure your fix compiles
+cleanly:
+
+		mvn clean install -Dall
+
+6. Submit pull request: for instructions on submitting a pull request
+see Using Pull Requests on GitHub.
+
+Pull requests are reviewed by module maintainers as outlined in Pull
+Requests.
 
 
